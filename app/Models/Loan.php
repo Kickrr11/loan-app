@@ -80,4 +80,33 @@ class Loan extends Model
 
         return $query->get();
     }
+
+    /**
+     * @return mixed
+     */
+    public function scopePrepareLoansDistributionsAmountsData(): mixed
+    {
+        return Loan::selectRaw('
+                DATE_FORMAT(created_at, "%Y-%m") as month_year,
+                SUM(CASE WHEN amount <= 1000 THEN 1 ELSE 0 END) as `0-1000`,
+                SUM(CASE WHEN amount > 1000 AND amount <= 5000 THEN 1 ELSE 0 END) as `1001-5000`,
+                SUM(CASE WHEN amount > 5000 AND amount <= 10000 THEN 1 ELSE 0 END) as `5001-10000`,
+                SUM(CASE WHEN amount > 10000 AND amount <= 50000 THEN 1 ELSE 0 END) as `10001-50000`,
+                SUM(CASE WHEN amount > 50000 THEN 1 ELSE 0 END) as `50001+`
+            ')
+            ->groupBy('month_year')
+            ->get()->toArray();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function scopePrepareLoanTermAnalysys(): mixed
+    {
+        return Loan::selectRaw(
+            'SUM(CASE WHEN term_months <= 12 THEN 1 ELSE 0 END) as short_term,
+            SUM(CASE WHEN term_months > 12 AND term_months <=60 THEN 1 ELSE 0 END) as medium_term,
+            SUM(CASE WHEN term_months >= 60  THEN 1 ELSE 0 END) as long_term',
+        )->first()->toArray();
+    }
 }

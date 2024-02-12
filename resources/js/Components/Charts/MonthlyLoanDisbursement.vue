@@ -46,7 +46,6 @@ const chartOptions = {
       type: 'column',
       yAxis: 0,
       color: '#29312d',
-
     },
     {
       name: 'Monthly Loan Count',

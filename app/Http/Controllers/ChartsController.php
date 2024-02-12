@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\LoanAmountDistribution;
-use App\Enums\LoansMonthlyAmountDistribution;
 use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -17,22 +16,49 @@ class ChartsController extends Controller
      */
     public function index(): Response
     {
+        $userLoans = $this->prepareUserLoans();
+        $loansAmountDistributions = LoanAmountDistribution::prepareLoansDistributionsAmountsData();
+        $monthlyLoanDistributions = Loan::monthlyAmountDistribution();
+        $loansByPeriodAnalisys = $this->prepareLoansByPeriodsAnalisys();
+
+        return Inertia::render('Dashboard', [
+            'usersLoans' => $userLoans,
+            'loansAmountDistributions' => $loansAmountDistributions,
+            'monthlyLoanDistributions' => $monthlyLoanDistributions,
+            'loansByPeriodAnalisys' => $loansByPeriodAnalisys,
+        ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function prepareLoansByPeriodsAnalisys(): array
+    {
+        $loansByPeriod = Loan::prepareLoanTermAnalysys();
+        $result = [];
+
+        foreach ($loansByPeriod as $key => $value) {
+            if ($value == 0) {
+                continue;
+            }
+            $result[] = ['name' => $key, 'y' => intval($value)];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function prepareUserLoans(): mixed
+    {
         $usersLoans = User::withCount('loans')->get(['name', 'loans_count']);
 
-        $formattedUsersLoans = $usersLoans->map(function ($user) {
+        return $usersLoans->map(function ($user) {
             return [
                 'name' => $user->name,
                 'y' => (float)$user->loans_count,
             ];
         })->reject(fn($user) => $user['y'] < 1)->values()->all();
-
-        $loansAmountDistributions = LoanAmountDistribution::prepareLoansDistributionsAmountsData();
-        $monthlyLoanDistributions = Loan::monthlyAmountDistribution();
-
-        return Inertia::render('Dashboard', [
-            'usersLoans' => $formattedUsersLoans,
-            'loansAmountDistributions' => $loansAmountDistributions,
-            'monthlyLoanDistributions' => $monthlyLoanDistributions,
-        ]);
     }
 }

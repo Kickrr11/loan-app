@@ -97,4 +97,9 @@ class ChartsTest extends TestCase
             ->where('monthlyLoanDistributions.1.loans_count', 2)
         );
     }
+
+    public function test_loan_term_analysis()
+    {
+
+    }
  }

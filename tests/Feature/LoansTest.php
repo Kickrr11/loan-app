@@ -28,11 +28,6 @@ class LoansTest extends TestCase
         $this->createUser();
     }
 
-    public function test_collections()
-    {
-
-    }
-
     public function test_it_can_send_a_notification_one_week_before_due_date()
     {
         Notification::fake();

@@ -6,11 +6,13 @@ import * as Dashboards from '@highcharts/dashboards/dashboards';
 import UsersLoans from '@/Components/Charts/UsersLoans.vue';
 import LoansAmountDistribution from '@/Components/Charts/LoansAmountDistribution.vue';
 import MonthlyLoanDisbursement from "@/Components/Charts/MonthlyLoanDisbursement.vue";
+import LoansByPeriod from "@/Components/Charts/LoansByPeriod.vue";
 
 const props = defineProps({
   usersLoans: Object,
   loansAmountDistributions: Object,
   monthlyLoanDistributions: Object,
+  loansByPeriodAnalisys: Object,
 });
 
 </script>
@@ -30,6 +32,7 @@ const props = defineProps({
             <UsersLoans :usersLoans="usersLoans"></UsersLoans>
             <LoansAmountDistribution :loansAmountDistributions="loansAmountDistributions"/>
             <MonthlyLoanDisbursement :monthlyLoanDistributions/>
+            <LoansByPeriod :loansByPeriodAnalisys="loansByPeriodAnalisys"/>
             <!--
             <highcharts :options="chartOptions"></highcharts>
             -->

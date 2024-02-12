@@ -64,7 +64,7 @@
       },
     ],
   });
-
+  console.log(Object.values(props.loansAmountDistributions));
 </script>
 
 <style scoped>
