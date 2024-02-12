@@ -8,8 +8,11 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import Highcharts from 'highcharts';
 import HighchartsVue from 'highcharts-vue';
 import exportingInit from 'highcharts/modules/exporting';
+import exportData from "highcharts/modules/export-data";
 
 exportingInit(Highcharts)
+exportData(Highcharts);
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

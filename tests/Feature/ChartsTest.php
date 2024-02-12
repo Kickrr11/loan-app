@@ -94,6 +94,7 @@ class ChartsTest extends TestCase
             ->where('monthlyLoanDistributions.0.amount', 800)
             ->where('monthlyLoanDistributions.1.month', 'Jun')
             ->where('monthlyLoanDistributions.1.amount', 1000)
+            ->where('monthlyLoanDistributions.1.loans_count', 2)
         );
     }
  }
