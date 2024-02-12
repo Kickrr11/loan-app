@@ -70,6 +70,7 @@ class Loan extends Model
 
         $query = $this::select(
             DB::raw('sum(amount) as amount'),
+            DB::raw('count(id) as loans_count'),
             DB::raw("CASE $monthCase END as month"),
             DB::raw($yearCase)
         )

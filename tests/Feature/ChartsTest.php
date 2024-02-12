@@ -74,7 +74,7 @@ class ChartsTest extends TestCase
 
     public function test_monthly_loan_disbursement()
     {
-        Loan::factory()->count(10)->state(new Sequence(
+        Loan::factory()->count(11)->state(new Sequence(
             ['amount' => 300, 'created_at' => Carbon::create(2023, 5)],
             ['amount' => 500, 'created_at' => Carbon::create(2023, 5)],
             ['amount' => 500, 'created_at' => Carbon::create(2023, 6)],
