@@ -32,6 +32,7 @@ class LoanFactory extends Factory
             'monthly_fee' => $monthlyFee,
             'term_months' => $period,
             'remaining_amount' => $amount,
+            'payment_due_date' => null,
         ];
     }
 }

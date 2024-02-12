@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Loans\StoreLoanRequest;
 use App\Models\Loan;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +17,7 @@ class LoansController extends Controller
     /**
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Loans/Index', [
             'loans' => Loan::with('borrower')->paginate(10),
@@ -40,10 +41,10 @@ class LoansController extends Controller
 
     /**
      * @param StoreLoanRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws \Exception
      */
-    public function store(StoreLoanRequest $request): \Illuminate\Http\RedirectResponse
+    public function store(StoreLoanRequest $request): RedirectResponse
     {
         try {
             $borrower = User::findOrFail(Arr::get($request->get('user'), 'id'));

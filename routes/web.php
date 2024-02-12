@@ -29,4 +29,6 @@ Route::middleware([
     // Payments
     Route::get('payments/create', [PaymentsController::class, 'create'])->name('payments.create');
     Route::post('payments/store', [PaymentsController::class, 'store'])->name('payments.store');
+    // Charts
+    Route::get('charts', [\App\Http\Controllers\ChartsController::class, 'index'])->name('charts.index');
 });

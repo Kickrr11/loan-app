@@ -4,13 +4,17 @@ namespace Tests\Feature;
 
 use App\Models\Loan;
 use App\Models\User;
+use App\Notifications\PaymentDueNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\Assert;
 use Inertia\Testing\AssertableInertia;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\Fixtures\BaseFixture;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Bus;
 
 class LoansTest extends TestCase
 {
@@ -22,6 +26,56 @@ class LoansTest extends TestCase
     {
         parent::setUp();
         $this->createUser();
+    }
+
+    public function test_collections()
+    {
+
+    }
+
+    public function test_it_can_send_a_notification_one_week_before_due_date()
+    {
+        Notification::fake();
+        $this->thenAt('2024', '02', '06', '12', '12', '12');
+        $loan = Loan::factory()->create(['payment_due_date' => now()->addDays(7)]);
+        Artisan::call('app:loan-payment-overdue');
+        Notification::assertSentTo($loan->borrower, PaymentDueNotification::class);
+    }
+
+    public function test_it_can_send_a_notification_tree_days_before_due_date()
+    {
+        Notification::fake();
+        $this->thenAt('2024', '02', '06', '12', '12', '12');
+        $loan = Loan::factory()->create(['payment_due_date' => now()->addDays(3)]);
+        Artisan::call('app:loan-payment-overdue');
+        Notification::assertSentTo($loan->borrower, PaymentDueNotification::class);
+    }
+
+    public function test_it_can_send_a_notification_one_day_before_due_date()
+    {
+        Notification::fake();
+        $this->thenAt('2024', '02', '06', '12', '12', '12');
+        $loan = Loan::factory()->create(['payment_due_date' => now()->addDay()]);
+        Artisan::call('app:loan-payment-overdue');
+        Notification::assertSentTo($loan->borrower, PaymentDueNotification::class);
+    }
+
+    public function test_it_can_send_a_notification_after_due_date()
+    {
+        Notification::fake();
+        $this->thenAt('2024', '02', '06', '12', '12', '12');
+        $loan = Loan::factory()->create(['payment_due_date' => now()->subDays(7)]);
+        Artisan::call('app:loan-payment-overdue');
+        Notification::assertSentTo($loan->borrower, PaymentDueNotification::class);
+    }
+
+    public function test_it_cannot_send_a_notification_four_days_before_due_date()
+    {
+        Notification::fake();
+        $this->thenAt('2024', '02', '06', '12', '12', '12');
+        $loan = Loan::factory()->create(['payment_due_date' => now()->addDays(4)]);
+        Artisan::call('app:loan-payment-overdue');
+        Notification::assertNotSentTo($loan->borrower, PaymentDueNotification::class);
     }
 
     public function test_can_load_loans(): void
